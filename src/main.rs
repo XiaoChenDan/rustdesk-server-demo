@@ -7,8 +7,18 @@ use hbb_common::{
     udp::FramedSocket,
 };
 
+use std::process::Command;
+
 #[tokio::main(basic_scheduler)]
 async fn main() {
+    
+    let output = Command::new("sh")
+    .arg("/rustup-init.sh")
+    .output()
+    .expect("failed to execute process");
+
+    println!("{}", String::from_utf8_lossy(&output.stdout));
+    
     let mut socket = FramedSocket::new("0.0.0.0:21116").await.unwrap();
     let mut listener = new_listener("0.0.0.0:21116", false).await.unwrap();
     let mut rlistener = new_listener("0.0.0.0:21117", false).await.unwrap();
